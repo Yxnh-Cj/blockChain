@@ -1,5 +1,5 @@
-from tkinter import *
-from tkinter import filedialog,ttk
+# from tkinter import *
+from tkinter import filedialog, ttk, Tk, Menu
 import tkinter as tk
 import os
 import re
@@ -7,25 +7,28 @@ import json
 import time
 import requests
 
-#打开文件夹
-def opendir():
-  # dir=os.path.dirname(fpath.get())
-  dir = 'D:/music/'
-  os.system('start '+ dir)
 
-#爬取
+# 打开文件夹
+def opendir():
+    # dir=os.path.dirname(fpath.get())
+    dir = 'D:/music/'
+    os.system('start ' + dir)
+
+
+# 爬取
 def crawing():
     name = song_name.get()
+
     def search(song_name):
         """搜索歌曲"""
         search_url = "https://songsearch.kugou.com/song_search_v2?callback=jQuery112405132987859127838_{}&page" \
                      "=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_fil" \
-                     "ter=0&_={}&keyword={}".format(str(int(time.time() * 1000)), str(int(time.time() * 1000)), song_name)
+                     "ter=0&_={}&keyword={}".format(str(int(time.time() * 1000)), str(int(time.time() * 1000)),
+                                                    song_name)
         obj = requests.get(search_url)
         start = re.search("jQuery\d+_\d+\(?", obj.text)
         data = json.loads(obj.text.strip().lstrip(start.group()).rstrip(")"))
         return data['data']['lists']
-
 
     def download(song_list, dir):
         """下载歌曲"""
@@ -56,7 +59,8 @@ def crawing():
             if os.path.exists(file_path):
                 os.remove(file_path)
             print(e)
-    if __name__=='__main__':
+
+    if __name__ == '__main__':
         dir = "D:\music"
         s = 'y'
         while s == 'y':
@@ -82,12 +86,12 @@ song_name = tk.StringVar()
 # mygui.config(menu=mymenu)
 # ttk.Button(mygui,text='打开',command=getfile).grid(row=0,column=0)
 # ttk.Entry(mygui,textvariable=fpath).grid(row=2,column=5)
-ttk.Button(mygui,text='open',command=opendir).grid(row=2,column=5)
+tk.ttk.Button(mygui, text='open', command=opendir).grid(row=2, column=5)
 
 # ttk.Button(mygui,text='open',command=main_search).grid(row=1,column=1)
 
-ttk.Entry(mygui,textvariable=song_name).grid(row=2,column=0)
-btn = Button(mygui,text='搜索并下载',command=crawing)
+tk.ttk.Entry(mygui, textvariable=song_name).grid(row=2, column=0)
+btn = tk.Button(mygui, text='搜索并下载', command=crawing)
 # btn['text']='搜索'
 btn.grid()
-mainloop()
+tk.mainloop()
